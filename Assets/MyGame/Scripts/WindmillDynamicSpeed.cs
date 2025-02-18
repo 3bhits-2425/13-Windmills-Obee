@@ -4,22 +4,22 @@ using UnityEngine.UI;
 public class WindmillDynamicSpeed : MonoBehaviour
 {
     [SerializeField] private Light lampLight; // Assign in Inspector
-    [SerializeField] private float maxLightIntensity = 1f; // Maximum lamp brightness
     [SerializeField] private Slider speedSlider; // Assign in Inspector
     [SerializeField] private float maxRotationSpeed = 300f; // Maximum speed
     [SerializeField] private float acceleration = 50f; // Speed increase per second
     [SerializeField] private float deceleration = 30f; // Speed decrease per second
     [SerializeField] private Button toggleSpeedButton; // Button to toggle speed
 
-    private float currentSpeed = 0f; // Current rotation speed
-    private bool isSpeedConstant = false; // Toggle state for constant speed
-    private bool isLocked = false; // State to lock input permanently
+    public float currentSpeed = 0f; // Current rotation speed
+    public bool isSpeedConstant = false; // Toggle state for constant speed
+    public bool isLocked = false; // State to lock input permanently
 
     private void Start()
     {
+        // Set up the button listener to toggle speed
         if (toggleSpeedButton != null)
         {
-            toggleSpeedButton.onClick.AddListener(ToggleSpeed); // Add button click listener
+            toggleSpeedButton.onClick.AddListener(ToggleSpeed);
         }
     }
 
@@ -48,6 +48,7 @@ public class WindmillDynamicSpeed : MonoBehaviour
             currentSpeed = Mathf.Clamp(currentSpeed, 0f, maxRotationSpeed);
         }
 
+        // Rotate the windmill
         RotateWindmill();
 
         // Update the slider value
@@ -59,18 +60,19 @@ public class WindmillDynamicSpeed : MonoBehaviour
         // Control light intensity based on speed
         if (lampLight != null)
         {
-            lampLight.intensity = Mathf.Lerp(0f, maxLightIntensity, currentSpeed / maxRotationSpeed);
+            lampLight.intensity = Mathf.Lerp(0f, 1f, currentSpeed / maxRotationSpeed);
         }
     }
 
-    private void RotateWindmill()
+    public void RotateWindmill()
     {
-        // Rotate the rotor hub
+        // Rotate the windmill at the current speed
         transform.Rotate(Vector3.forward * currentSpeed * Time.deltaTime);
     }
 
-    private void ToggleSpeed()
+    public void ToggleSpeed()
     {
+        // Toggle speed constant mode and lock input
         if (isLocked)
         {
             return; // Do nothing if locked
@@ -86,8 +88,14 @@ public class WindmillDynamicSpeed : MonoBehaviour
         }
     }
 
-    private void LockInput()
-    {
-        isLocked = true;
-    }
+  public void LockInput()
+{
+    isLocked = true;
+}
+
+public void UnlockInput()
+{
+    isLocked = false;
+}
+
 }
